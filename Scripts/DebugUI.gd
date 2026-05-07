@@ -9,9 +9,17 @@ func _ready() -> void:
 	
 	battle_manager.state_changed.connect(_update_static_ui)
 	_update_static_ui()
+	
+	# Connect all buttons (correct names from scene)
+	_connect_button("ButtonCont/EnterBattleBtn", _on_enter_battle)
+	_connect_button("ButtonCont/PlayCardBtn", _on_play_card)
+	_connect_button("ButtonCont/AddManaBtn", _on_add_mana)
+	_connect_button("ButtonCont/DrawCardBtn", _on_draw_card)
+	_connect_button("ButtonCont/KillEnemyBtn", _on_kill_enemy)
+	_connect_button("ButtonCont/RespawnBtn", _on_respawn)
 
 # Runs every frame for smooth progress bars and timer labels
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if not battle_manager: return
 	
 	var data = battle_manager.get_debug_data()
@@ -76,6 +84,11 @@ func _update_card_zone(path: String, card_array: Array, zone_name: String) -> vo
 	else:
 		for i in card_array.size():
 			var card = card_array[i]
+			if card == null:
+				text += "• [color=red]NULL CARD[/color]\n"
+				print("WARNING: Null card found in ", zone_name, " at index ", i)
+				continue
+			
 			text += "• %s" % card.card_name
 			if i < card_array.size() - 1:
 				text += "\n"
@@ -102,3 +115,10 @@ func _on_kill_enemy() -> void:
 
 func _on_respawn() -> void:
 	battle_manager.respawn_enemy()
+	
+func _connect_button(button_path: String, callable: Callable) -> void:
+	var button = get_node_or_null(button_path)
+	if button:
+		button.pressed.connect(callable)
+	else:
+		print("Warning: Button not found → ", button_path)	

@@ -2,6 +2,14 @@
 
 [ext_resource type="Script" uid="uid://4ewejl7vs2sq" path="res://Scripts/DebugUI.gd" id="1_fpupx"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fpupx"]
+bg_color = Color(0, 0, 0, 0.27450982)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7gdgf"]
+resource_local_to_scene = true
+resource_name = "FlatboxBG"
+bg_color = Color(0.33511624, 0.3351163, 0.33511612, 1)
+
 [node name="DebugUI" type="Control" unique_id=837358520]
 layout_mode = 3
 anchors_preset = 15
@@ -93,6 +101,7 @@ grow_vertical = 0
 [node name="DeckZone" type="RichTextLabel" parent="DecklistsCont" unique_id=513526923]
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Deck"
 fit_content = true
@@ -115,6 +124,7 @@ text = "Discard "
 [node name="DiscardZone" type="RichTextLabel" parent="DecklistsCont" unique_id=404874313]
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Discard"
 fit_content = true
@@ -166,6 +176,8 @@ text = "Hand"
 [node name="HandZone" type="RichTextLabel" parent="DrawCont" unique_id=1961544430]
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+theme_override_styles/background = SubResource("StyleBoxFlat_7gdgf")
 bbcode_enabled = true
 text = "Hand"
 fit_content = true
@@ -178,6 +190,7 @@ offset_left = 514.0
 offset_top = 236.0
 offset_right = 614.0
 offset_bottom = 296.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Resolving"
 fit_content = true
