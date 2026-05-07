@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 CardDatabase="*uid://mcglxpd1cocp"
 BattleManager="*uid://ccdiyvyyj3p7x"
+BattleConfig="*uid://d23mgcilxt82t"
 
 [editor]
 

@@ -212,3 +212,50 @@ text = "Enemy Name"
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Enemy HP"
+
+[node name="RewardCont" type="GridContainer" parent="." unique_id=1349942976]
+layout_mode = 0
+offset_left = 939.0
+offset_top = 13.0
+offset_right = 1139.0
+offset_bottom = 178.0
+
+[node name="RewardOptionsLabel" type="RichTextLabel" parent="RewardCont" unique_id=1929416026]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Rewards"
+fit_content = true
+scroll_active = false
+
+[node name="ClaimReward0Btn" type="Button" parent="RewardCont" unique_id=22658469]
+layout_mode = 2
+text = "Reward 1
+"
+
+[node name="ClaimReward1Btn" type="Button" parent="RewardCont" unique_id=341427964]
+layout_mode = 2
+text = "Reward 2
+"
+
+[node name="ClaimReward2Btn" type="Button" parent="RewardCont" unique_id=155920631]
+layout_mode = 2
+text = "Reward 3
+"
+
+[node name="CollectionCont" type="VBoxContainer" parent="." unique_id=40114502]
+layout_mode = 0
+offset_left = 733.0
+offset_top = 14.0
+offset_right = 933.0
+offset_bottom = 74.0
+
+[node name="CollectionZone" type="RichTextLabel" parent="CollectionCont" unique_id=1752698474]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Collection"
+fit_content = true
+scroll_active = false
