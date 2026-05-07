@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://b1sh4xi8xtm66"]
+
+[ext_resource type="Script" uid="uid://du17gmudyplqd" path="res://Scripts/Entities/Enemy.gd" id="1_jjgbg"]
+[ext_resource type="PackedScene" uid="uid://lh0rri3imrea" path="res://Scenes/UI/DebugUI.tscn" id="2_bo1nx"]
+
+[sub_resource type="Environment" id="Environment_7dm0k"]
+background_mode = 1
+background_color = Color(0.0893584, 0.15973082, 0.14336687, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.1446513, 0.20299318, 0.19720489, 1)
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_read_sky_light = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0xm2m"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h2yge"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1bvp3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lquwl"]
+
+[node name="Main" type="Node3D" unique_id=1487016678]
+
+[node name="World" type="Node3D" parent="." unique_id=2145139169]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=106534416]
+environment = SubResource("Environment_7dm0k")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World" unique_id=626229071]
+transform = Transform3D(0.84583956, -0.285193, -0.4507997, 0.5334374, 0.45221338, 0.714806, 0, -0.8450846, 0.53463256, 0, 4.675806, 0)
+shadow_enabled = true
+shadow_blur = 1.01
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World" unique_id=886161634]
+transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 0)
+mesh = SubResource("PlaneMesh_ig7tw")
+
+[node name="PlayerCapsule" type="CharacterBody3D" parent="World" unique_id=1224427177 groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/PlayerCapsule" unique_id=2070636343]
+mesh = SubResource("CapsuleMesh_0xm2m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/PlayerCapsule" unique_id=865551805]
+shape = SubResource("CapsuleShape3D_h2yge")
+
+[node name="EnemyCube" type="Node3D" parent="World" unique_id=1760996708 groups=["enemy"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9149773, -5.48407)
+script = ExtResource("1_jjgbg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/EnemyCube" unique_id=1021795598]
+mesh = SubResource("BoxMesh_1bvp3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/EnemyCube" unique_id=1015972621]
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="Camera3D" type="Camera3D" parent="World" unique_id=1953536960]
+transform = Transform3D(1, 0, 0, 0, 0.897474, 0.4410673, 0, -0.4410673, 0.897474, 0, 3.3733487, 2.3973122)
+
+[node name="UI" type="Node2D" parent="." unique_id=190309942]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1599218965]
+
+[node name="DebugUI" parent="CanvasLayer" unique_id=837358520 instance=ExtResource("2_bo1nx")]

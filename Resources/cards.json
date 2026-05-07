@@ -1,0 +1,30 @@
+[
+  {
+	"name": "Strike",
+	"damage": 5
+  },
+  {
+	"name": "Heavy Strike",
+	"damage": 8
+  },
+  {
+	"name": "Quick Strike",
+	"damage": 3
+  },
+  {
+	"name": "Mana Surge",
+	"damage": 0
+  },
+  {
+	"name": "Double Strike",
+	"damage": 4
+  },
+  {
+	"name": "Piercing Strike",
+	"damage": 6
+  },
+  {
+	"name": "Instant WIN",
+	"damage": 999
+  }
+]
