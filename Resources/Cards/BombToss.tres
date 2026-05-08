@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://f1g2h3i4j5k6"]
+
+[ext_resource type="Script" path="res://Scripts/Resources/CardData.gd" id="1"]
+
+[resource]
+card_name = "Bomb Toss"
+card_type = "Power Atk"
+tickdown = 6
+damage = 20
+guard = 0
+mana_add = 0
+mana_cost = 3
+requires_rage = true
+effects = Array[Resource]([])

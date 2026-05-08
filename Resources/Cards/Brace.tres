@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://d9f8g7h6j5k4"]
+
+[ext_resource type="Script" path="res://Scripts/Resources/CardData.gd" id="1"]
+
+[resource]
+card_name = "Brace"
+card_type = "Defend"
+tickdown = 3
+damage = 0
+guard = 10
+mana_add = 1
+mana_cost = 0
+requires_rage = false
+effects = Array[Resource]([])
