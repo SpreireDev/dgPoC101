@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=1 format=3 uid="uid://generated-brace"]
+[gd_resource type="CardData" load_steps=1 format=3 uid="uid://d1f2a3b4c5d6e"]
 
 [resource]
 card_name = "Brace"
@@ -9,4 +9,4 @@ guard = 10
 mana_add = 1
 mana_cost = 0
 requires_rage = false
-effects = Array[Resource]([])
+effects = []

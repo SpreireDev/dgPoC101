@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=1 format=3 uid="uid://generated-slash"]
+[gd_resource type="CardData" load_steps=1 format=3 uid="uid://e7f8g9h0i1j2k"]
 
 [resource]
 card_name = "Slash"
@@ -9,4 +9,4 @@ guard = 0
 mana_add = 0
 mana_cost = 1
 requires_rage = false
-effects = Array[Resource]([])
+effects = []

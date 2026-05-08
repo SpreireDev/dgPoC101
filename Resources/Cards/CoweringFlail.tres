@@ -1,6 +1,4 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://b7c8d9e0f1a2"]
-
-[ext_resource type="Script" path="res://Scripts/Resources/CardData.gd" id="1"]
+[gd_resource type="CardData" load_steps=1 format=3 uid="uid://l3m4n5o6p7q8r"]
 
 [resource]
 card_name = "Cowering Flail"
@@ -11,4 +9,4 @@ guard = 4
 mana_add = 0
 mana_cost = 1
 requires_rage = false
-effects = Array[Resource]([])
+effects = []

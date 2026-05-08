@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=1 format=3 uid="uid://generated-parry"]
+[gd_resource type="CardData" load_steps=1 format=3 uid="uid://z5a6b7c8d9e0f"]
 
 [resource]
 card_name = "Parry"
@@ -9,4 +9,4 @@ guard = 5
 mana_add = 0
 mana_cost = 0
 requires_rage = false
-effects = Array[Resource]([])
+effects = []

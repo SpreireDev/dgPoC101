@@ -1,6 +1,4 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://g7h8i9j0k1l2"]
-
-[ext_resource type="Script" path="res://Scripts/Resources/CardData.gd" id="1"]
+[gd_resource type="CardData" load_steps=1 format=3 uid="uid://u3v4w5x6y7z8a"]
 
 [resource]
 card_name = "Ready Fuse"
@@ -11,4 +9,4 @@ guard = 0
 mana_add = 5
 mana_cost = 0
 requires_rage = true
-effects = Array[Resource]([])
+effects = []
