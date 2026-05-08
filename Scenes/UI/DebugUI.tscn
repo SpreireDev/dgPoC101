@@ -186,10 +186,10 @@ scroll_active = false
 [node name="ResolvingZone" type="RichTextLabel" parent="." unique_id=1709814981]
 custom_minimum_size = Vector2(100, 60)
 layout_mode = 0
-offset_left = 514.0
-offset_top = 236.0
-offset_right = 614.0
-offset_bottom = 296.0
+offset_left = 806.0
+offset_top = 365.0
+offset_right = 906.0
+offset_bottom = 425.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Resolving"
@@ -230,16 +230,19 @@ fit_content = true
 scroll_active = false
 
 [node name="ClaimReward0Btn" type="Button" parent="RewardCont" unique_id=22658469]
+visible = false
 layout_mode = 2
 text = "Reward 1
 "
 
 [node name="ClaimReward1Btn" type="Button" parent="RewardCont" unique_id=341427964]
+visible = false
 layout_mode = 2
 text = "Reward 2
 "
 
 [node name="ClaimReward2Btn" type="Button" parent="RewardCont" unique_id=155920631]
+visible = false
 layout_mode = 2
 text = "Reward 3
 "

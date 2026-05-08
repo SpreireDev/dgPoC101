@@ -14,5 +14,8 @@ extends Node
 @export var draw_stagger_delay: float = 0.2     # delay between starting-hand draws
 @export var resolving_time: float = 0.5          # how long a played card stays in ResolvingZone
 
+@export var reshuffle_animation_delay: float = 0.6     # cards flying from discard → deck
+@export var enemy_death_delay: float = 0.8             # time between enemy death and Reward mode
+
 func _ready() -> void:
 	print("✅ BattleConfig loaded — all values editable at runtime")

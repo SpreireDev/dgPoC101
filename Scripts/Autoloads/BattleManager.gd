@@ -9,6 +9,8 @@ var starting_mana: int
 var mana_max: int
 var draw_time: float
 var mana_regen_time: float
+var reshuffle_animation_delay: float
+var enemy_death_delay: float
 
 # ... (keep the rest of your existing member variables unchanged)
 
@@ -40,6 +42,8 @@ func _ready() -> void:
 	mana_max = BattleConfig.mana_max
 	draw_time = BattleConfig.draw_time
 	mana_regen_time = BattleConfig.mana_regen_time
+	reshuffle_animation_delay = BattleConfig.reshuffle_animation_delay
+	enemy_death_delay = BattleConfig.enemy_death_delay
 	
 	draw_timer = Timer.new()
 	mana_timer = Timer.new()
@@ -84,6 +88,7 @@ func start_new_battle() -> void:
 	print("=== START NEW BATTLE ===")
 	print("Collection size:", player_collection.size())
 	print("Battle deck created with", battle_deck.size(), "cards")
+	_trigger_animation("battle_started", {"hand_size": starting_hand})
 	
 	# === Staggered starting hand ===
 	await _draw_starting_hand_sequenced()
@@ -94,7 +99,7 @@ func start_new_battle() -> void:
 	emit_signal("state_changed")
 	
 func _draw_card(start_draw_timer: bool = true) -> void:
-	if not _ensure_battle_deck_not_empty():
+	if not await _ensure_battle_deck_not_empty():
 		return
 	
 	var card = battle_deck.pop_front()
@@ -103,6 +108,7 @@ func _draw_card(start_draw_timer: bool = true) -> void:
 	
 	hand.append(card)
 	_update_full_hand_state()
+	_trigger_animation("card_drawn", {"card_name": card.card_name})
 	emit_signal("state_changed")
 	
 	if start_draw_timer:
@@ -120,6 +126,14 @@ func _draw_starting_hand_sequenced() -> void:
 		# Small delay between each card for nice pacing
 		if i < starting_hand - 1:
 			await get_tree().create_timer(BattleConfig.draw_stagger_delay).timeout
+			
+func _show_resolving_card(card: CardData) -> void:
+	# Let DebugUI handle its own UI (cleaner)
+	if has_node("/root/Main/CanvasLayer/DebugUI"):
+		var debug_ui = get_node("/root/Main/CanvasLayer/DebugUI")
+		debug_ui.show_resolving_card(card)
+	else:
+		print("Warning: DebugUI not found for resolving zone")
 
 func _reset_battle_state() -> void:
 	mana = starting_mana
@@ -142,12 +156,19 @@ func _create_deck_from_database() -> void:
 
 func _ensure_battle_deck_not_empty() -> bool:
 	if battle_deck.is_empty():
-		if discard.is_empty(): return false
+		if discard.is_empty():
+			return false
+		
 		battle_deck = discard.duplicate()
 		battle_deck.shuffle()
 		discard.clear()
+		
+		_trigger_animation("reshuffle_started")
+		await get_tree().create_timer(BattleConfig.reshuffle_animation_delay).timeout
+		_trigger_animation("reshuffle_completed")
+		
+		print("Battle deck reshuffled from discard (%d cards) [%.2fs delay]" % [battle_deck.size(), BattleConfig.reshuffle_animation_delay])
 	return true
-
 
 
 
@@ -170,20 +191,58 @@ func _on_mana_timer_timeout() -> void:
 
 
 func play_card_at_index(index: int) -> void:
-	if index < 0 or index >= hand.size() or mana < 1: return
+	if index < 0 or index >= hand.size() or mana < 1:
+		return
+	
 	var card = hand.pop_at(index)
-	if card == null: return
+	if card == null:
+		return
+	
 	last_card_played = card.card_name
+	
+	# Resolving zone + animation trigger
+	if has_node("/root/Main/CanvasLayer/DebugUI"):
+		get_node("/root/Main/CanvasLayer/DebugUI").show_resolving_card(card)
+	_trigger_animation("card_played", {"card_name": card.card_name, "damage": card.damage})
+	
+	await get_tree().create_timer(BattleConfig.resolving_time).timeout
+	
 	discard.append(card)
 	mana -= 1
+	
 	_update_full_hand_state()
 	_trigger_attack_animation(card.damage)
+	
 	if draw_queued and hand.size() < max_hand_size:
 		_draw_card()
 		draw_queued = false
+	
 	emit_signal("state_changed")
+	
+	
 
 
+
+
+func force_discard_from_hand(index: int) -> void:
+	if index < 0 or index >= hand.size():
+		return
+	
+	var card = hand.pop_at(index)
+	if card == null:
+		return
+	
+	discard.append(card)
+	_update_full_hand_state()
+	
+	_trigger_animation("card_discarded", {
+		"card_name": card.card_name,
+		"source": "force_discard_from_hand"
+	})
+	
+	emit_signal("state_changed")
+	
+	
 func force_draw() -> void:
 	if hand.size() < max_hand_size:
 		_draw_card()
@@ -197,6 +256,7 @@ func add_mana(amount: int = 1) -> void:          # ← this was missing / broken
 
 
 func end_battle() -> void:
+	_trigger_animation("battle_ended")
 	draw_timer.stop()
 	mana_timer.stop()
 	hand.clear()
@@ -219,18 +279,25 @@ func offer_rewards() -> void:
 
 
 func claim_reward(index: int) -> void:
-	if current_mode != "Reward" or index < 0 or index >= reward_options.size(): return
-	player_collection.append(reward_options[index])
+	if current_mode != "Reward" or index < 0 or index >= reward_options.size():
+		return
+	
+	var chosen_card = reward_options[index]
+	player_collection.append(chosen_card)
+	
+	_trigger_animation("reward_claimed", {"card_name": chosen_card.card_name})
+	
+	print("Claimed card: ", chosen_card.card_name)
+	
 	reward_options.clear()
 	current_mode = "Exploration"
 	emit_signal("state_changed")
-
 
 func _trigger_attack_animation(damage: int) -> void:
 	if enemy and enemy.has_method("take_damage"):
 		enemy.take_damage(damage)
 		
-		# Safe HP check (Enemy.gd uses either 'hp' or 'current_hp')
+		# Safe HP check
 		var hp = 100
 		if enemy:
 			if "hp" in enemy:
@@ -239,6 +306,8 @@ func _trigger_attack_animation(damage: int) -> void:
 				hp = enemy.current_hp
 		
 		if hp <= 0:
+			_trigger_animation("enemy_died")
+			await get_tree().create_timer(BattleConfig.enemy_death_delay).timeout
 			end_battle()
 
 func kill_enemy() -> void:
@@ -251,6 +320,10 @@ func respawn_enemy() -> void:
 	if enemy and enemy.has_method("reset_hp"):
 		enemy.reset_hp()
 	emit_signal("state_changed")
+	
+func _trigger_animation(event_name: String, data: Dictionary = {}) -> void:
+	# Placeholder for VFX / animations / sound later
+	print("[ANIM_TRIGGER] %s %s" % [event_name, data])
 
 
 func get_debug_data() -> Dictionary:

@@ -93,12 +93,13 @@ func _update_static_ui() -> void:
 	
 		# === Populate RichTextLabels with actual cards ===
 	_update_card_zone("DecklistsCont/DeckZone", data.battle_deck_cards, "Battle Deck")
-	_update_card_zone("DrawCont/HandZone", data.hand_cards, "Hand")
+	_update_card_zone("DrawCont/HandZone", data.hand_cards, "Hand", true)   # clickable = true
 	_update_card_zone("DecklistsCont/DiscardZone", data.discard_cards, "Discard")
 	_update_card_zone("CollectionCont/CollectionZone", data.collection_cards, "Player Collection")  # adjust path if your discard label is named differently
 	
 	# Reward (already handled)
 	_update_reward_ui(data)
+	_update_ui_visibility(data.mode)
 	
 	
 
@@ -106,8 +107,13 @@ func _set_label_text(path: String, text: String) -> void:
 	var label = get_node_or_null(path)
 	if label:
 		label.text = text
+		
+func _on_hand_meta_clicked(meta) -> void:
+	# meta is the index we stored in the [url] tag
+	var index = int(meta)
+	battle_manager.play_card_at_index(index)
 
-func _update_card_zone(path: String, cards: Array, title: String) -> void:
+func _update_card_zone(path: String, cards: Array, title: String, clickable: bool = false) -> void:
 	var zone = get_node_or_null(path)
 	if not zone:
 		return
@@ -118,10 +124,20 @@ func _update_card_zone(path: String, cards: Array, title: String) -> void:
 	if cards.is_empty():
 		text += "[i]empty[/i]"
 	else:
-		for card in cards:
-			text += "• %s (DMG %d)\n" % [card.card_name, card.damage]
+		for i in cards.size():
+			var card = cards[i]
+			if clickable:
+				# Only HandZone gets clickable [url] tags
+				text += "[url=%d]• %s (DMG %d)[/url]\n" % [i, card.card_name, card.damage]
+			else:
+				text += "• %s (DMG %d)\n" % [card.card_name, card.damage]
 	
 	zone.text = text
+	
+	# Connect meta_clicked ONLY for the HandZone (once)
+	if clickable and not zone.meta_clicked.is_connected(_on_hand_meta_clicked):
+		zone.meta_clicked.connect(_on_hand_meta_clicked)
+
 
 # Button functions (same as before)
 #func _on_enter_battle() -> void:
@@ -133,6 +149,19 @@ func _on_enter_battle() -> void:
 
 func _on_play_card() -> void:
 	battle_manager.play_card_at_index(0)
+	
+func show_resolving_card(card: CardData) -> void:
+	var zone = get_node_or_null("ResolvingZone")
+	if not zone:
+		print("Warning: ResolvingZone not found")
+		return
+	
+	zone.bbcode_enabled = true
+	zone.text = "[b]RESOLVING[/b]\n• %s (DMG %d)" % [card.card_name, card.damage]
+	
+	# Auto-clear after the configured time
+	await get_tree().create_timer(BattleConfig.resolving_time).timeout
+	zone.text = ""
 
 func _on_add_mana() -> void:
 	battle_manager.add_mana(1)
@@ -164,8 +193,33 @@ func _update_reward_ui(data: Dictionary) -> void:
 	var cards = data.get("reward_cards", [])
 	for i in cards.size():
 		var card = cards[i]
-		label.text += "%d. %s (DMG %d)\n" % [i, card.card_name, card.damage] 
-		
+		# Make each reward line clickable
+		label.text += "[url=%d]%d. %s (DMG %d)[/url]\n" % [i, i, card.card_name, card.damage]
+	
+	# Connect meta_clicked only once
+	if not label.meta_clicked.is_connected(_on_reward_meta_clicked):
+		label.meta_clicked.connect(_on_reward_meta_clicked)
+
+func _on_reward_meta_clicked(meta) -> void:
+	var index = int(meta)
+	battle_manager.claim_reward(index)
+
+func _update_ui_visibility(mode: String) -> void:
+	# Always visible
+	get_node_or_null("InfoCont").visible = true
+	get_node_or_null("ButtonCont").visible = true
+	
+	# Battle-only
+	var is_battle = mode == "Battle"
+	get_node_or_null("EnemyCont").visible = is_battle or mode == "Exploration"
+	get_node_or_null("DrawCont").visible = is_battle
+	get_node_or_null("DecklistsCont").visible = is_battle
+	get_node_or_null("EnergyCont").visible = is_battle
+	
+	# Reward-only
+	var is_reward = mode == "Reward"
+	get_node_or_null("RewardCont").visible = is_reward
+	get_node_or_null("CollectionCont").visible = is_reward or mode == "Exploration"
 
 func _connect_button(button_path: String, callable: Callable) -> void:
 	var button = get_node_or_null(button_path)
