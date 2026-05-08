@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=1 format=3 uid="uid://generated-brace-ii"]
+
+[resource]
+card_name = "Brace II"
+card_type = "Defend"
+tickdown = 3
+damage = 0
+guard = 15
+mana_add = 2
+mana_cost = 0
+requires_rage = true
+effects = Array[Resource]([])

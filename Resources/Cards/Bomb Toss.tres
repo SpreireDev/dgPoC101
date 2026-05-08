@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=1 format=3 uid="uid://generated-bomb-toss"]
+
+[resource]
+card_name = "Bomb Toss"
+card_type = "Power Atk"
+tickdown = 6
+damage = 20
+guard = 0
+mana_add = 0
+mana_cost = 3
+requires_rage = true
+effects = Array[Resource]([])

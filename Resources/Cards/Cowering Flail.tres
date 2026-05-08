@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=1 format=3 uid="uid://generated-cowering-flail"]
+
+[resource]
+card_name = "Cowering Flail"
+card_type = "Attack"
+tickdown = 4
+damage = 4
+guard = 4
+mana_add = 0
+mana_cost = 1
+requires_rage = false
+effects = Array[Resource]([])

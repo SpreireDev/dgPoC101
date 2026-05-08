@@ -1,6 +1,4 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://a1b2c3d4e5f6"]
-
-[ext_resource type="Script" path="res://Scripts/Resources/CardData.gd" id="1"]
+[gd_resource type="Resource" script_class="CardData" load_steps=1 format=3 uid="uid://generated-slash"]
 
 [resource]
 card_name = "Slash"
