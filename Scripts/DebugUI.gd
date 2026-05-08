@@ -1,232 +1,248 @@
 extends Control
 
-@onready var battle_manager = get_node("/root/BattleManager")
+
+# InfoCont
+@onready var mode_label: Label = $InfoCont/ModeLabel
+@onready var last_card_label: Label = $InfoCont/LastCardLabel
+@onready var killed_label: Label = $InfoCont/KilledLabel
+
+# DecklistsCont
+@onready var deck_label: Label = $DecklistsCont/DeckLabel
+@onready var discard_label: Label = $DecklistsCont/DiscardLabel
+@onready var deck_zone: RichTextLabel = $DecklistsCont/DeckZone
+@onready var discard_zone: RichTextLabel = $DecklistsCont/DiscardZone
+
+# EnergyCont
+@onready var mana_label: Label = $EnergyCont/ManaLabel
+@onready var mana_timer_label: Label = $EnergyCont/ManaTimerLabel
+@onready var mana_progress: ProgressBar = $EnergyCont/ManaProgress
+
+# DrawCont
+@onready var draw_timer_label: Label = $DrawCont/DrawTimerLabel
+@onready var draw_progress: ProgressBar = $DrawCont/DrawProgress
+@onready var hand_label: Label = $DrawCont/HandLabel
+@onready var hand_zone: RichTextLabel = $DrawCont/HandZone
+
+# Player stats
+@onready var player_hp_label: Label = $PlayerCont/PlayerHPLabel
+@onready var player_guard_label: Label = $GuardCont/PlayerGrdLabel
+
+# Guard / Resolve / Exile zones
+@onready var guard_zone_label: RichTextLabel = $GuardCont/GuardZone
+@onready var resolving_zone_label: RichTextLabel = $ResolveCont/ResolvingZone
+@onready var exile_zone_label: RichTextLabel = $ExileCont/ExileZone
+
+# Enemy panel
+@onready var enemy_name_label: Label = $EnemyCont/EnemyNameLabel
+@onready var enemy_hp_label: Label = $EnemyCont/EnemyHPLabel
+@onready var enemy_grd_label: Label = $EnemyCont/EnemyGrdLabel
+@onready var enemy_hand_zone: RichTextLabel = $EnemyCont/EnemyHandZone
+@onready var enemy_tele_label: Label = $EnemyCont/EnemyTeleLabel
+@onready var enemy_progress: ProgressBar = $EnemyCont/EnemyProgress
+@onready var enemy_rage_check: CheckBox = $EnemyCont/EnemyRage
+
+# Dynamic Attack/Guard buttons (separate container)
+@onready var hand_buttons_container = $DrawCont/HandZone
+
+# RewardZone click support
+@onready var reward_zone: RichTextLabel = $RewardCont/RewardZone
+
+# Collection (for rewards)
+@onready var collection_zone: RichTextLabel = $CollectionCont/CollectionZone
 
 func _ready() -> void:
-	if not battle_manager:
-		print("ERROR: BattleManager not found!")
-		return
+	BattleManager.state_changed.connect(_on_state_changed)
+	BattleManager.zones_changed.connect(_on_state_changed)
+	BattleManager.enemy_state_changed.connect(_on_enemy_state_changed)
+	BattleManager.resolving_card_changed.connect(_on_resolving_card_changed)
+	hand_zone.meta_clicked.connect(_on_hand_zone_meta_clicked)
+	reward_zone.meta_clicked.connect(_on_reward_meta_clicked)
 	
-	battle_manager.state_changed.connect(_update_static_ui)
-	_update_static_ui()
-	
-	# Debug control buttons
-	_connect_button("ButtonCont/EnterBattleBtn", _on_enter_battle)
-	_connect_button("ButtonCont/PlayCardBtn", _on_play_card)
-	_connect_button("ButtonCont/AddManaBtn", _on_add_mana)
-	_connect_button("ButtonCont/DrawCardBtn", _on_draw_card)
-	_connect_button("ButtonCont/KillEnemyBtn", _on_kill_enemy)
-	_connect_button("ButtonCont/RespawnBtn", _on_respawn)
-	
-	# Reward buttons
-	_connect_button("RewardCont/ClaimReward0Btn", _on_claim_reward_0)
-	_connect_button("RewardCont/ClaimReward1Btn", _on_claim_reward_1)
-	_connect_button("RewardCont/ClaimReward2Btn", _on_claim_reward_2)
+	_refresh_ui()
+	set_process(true)
 
-
-# === Reward button handlers (named functions) ===
-func _on_claim_reward_0() -> void:  battle_manager.claim_reward(0)
-func _on_claim_reward_1() -> void:  battle_manager.claim_reward(1)
-func _on_claim_reward_2() -> void:  battle_manager.claim_reward(2)
+func _create_hand_buttons() -> void:
+	# Always create a separate container to avoid conflict with HandZone RichTextLabel
+	if hand_buttons_container == null or hand_buttons_container.name == "HandZone":
+		hand_buttons_container = HBoxContainer.new()
+		hand_buttons_container.name = "HandButtons"
+		$DrawCont.add_child(hand_buttons_container)
 	
-func _process(_delta: float) -> void:
-	if not battle_manager: return
+	# Clear any existing buttons (prevents duplicates on refresh)
+	for child in hand_buttons_container.get_children():
+		child.queue_free()
 	
-	var data = battle_manager.get_debug_data()
-	
-	# Smooth timer labels
-	_set_label_text("EnergyCont/ManaTimerLabel", "Mana Timer: %.2f" % data.mana_timer)
-	_set_label_text("DrawCont/DrawTimerLabel", "Draw Timer: %.2f" % data.draw_timer)
-	
-	# Smooth progress bars
-	var mana_progress = get_node_or_null("EnergyCont/ManaProgress")
-	var draw_progress = get_node_or_null("DrawCont/DrawProgress")
-	
-	if mana_progress:
-		var percent = (data.mana_timer / battle_manager.mana_regen_time) * 100.0
-		mana_progress.value = clamp(percent, 0, 100)
-	
-	if draw_progress:
-		var percent = (data.draw_timer / battle_manager.draw_time) * 100.0
-		draw_progress.value = clamp(percent, 0, 100)
-
-# Only updates when something important changes (card played, etc.)
-
-
-func _update_static_ui() -> void:
-	var data: Dictionary = battle_manager.get_debug_data()
-	
-	# InfoCont
-	var node = get_node_or_null("InfoCont/ModeLabel")
-	if node: node.text = "Mode: %s" % data.mode
-	
-	node = get_node_or_null("InfoCont/LastCardLabel")
-	if node: node.text = "Last Card: %s" % (data.last_card_played if data.last_card_played else "—")
-	
-	# EnemyCont
-	node = get_node_or_null("EnemyCont/EnemyNameLabel")
-	if node: node.text = "Enemy: %s" % data.enemy_name
-	
-	node = get_node_or_null("EnemyCont/EnemyHPLabel")
-	if node: node.text = "Enemy HP: %d" % data.enemy_hp
-	
-	# DecklistsCont (Battle Deck + Discard)
-	node = get_node_or_null("DecklistsCont/DeckZone/DeckLabel")
-	if node: node.text = "Battle Deck: %d" % data.battle_deck
-	
-	node = get_node_or_null("DecklistsCont/DiscardLabel")
-	if node: node.text = "Discard: %d" % data.discard_count
-	
-	# EnergyCont
-	node = get_node_or_null("EnergyCont/ManaLabel")
-	if node: node.text = "Mana: %d / %d" % [data.mana, data.mana_max]
-	
-	node = get_node_or_null("EnergyCont/ManaTimerLabel")
-	if node: node.text = "Mana Timer: %.1f" % data.mana_timer
-	
-	# DrawCont
-	node = get_node_or_null("DrawCont/DrawTimerLabel")
-	if node: node.text = "Draw Timer: %.1f" % data.draw_timer
-	
-	node = get_node_or_null("DrawCont/HandLabel")
-	if node: node.text = "Hand: %d / %d" % [data.hand_count, data.hand_limit]
-	
-		# === Populate RichTextLabels with actual cards ===
-	_update_card_zone("DecklistsCont/DeckZone", data.battle_deck_cards, "Battle Deck")
-	_update_card_zone("DrawCont/HandZone", data.hand_cards, "Hand", true)   # clickable = true
-	_update_card_zone("DecklistsCont/DiscardZone", data.discard_cards, "Discard")
-	_update_card_zone("CollectionCont/CollectionZone", data.collection_cards, "Player Collection")  # adjust path if your discard label is named differently
-	
-	# Reward (already handled)
-	_update_reward_ui(data)
-	_update_ui_visibility(data.mode)
-	
-	
-
-func _set_label_text(path: String, text: String) -> void:
-	var label = get_node_or_null(path)
-	if label:
-		label.text = text
+	for i in range(5):
+		var hbox = HBoxContainer.new()
+		hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
-func _on_hand_meta_clicked(meta) -> void:
-	# meta is the index we stored in the [url] tag
-	var index = int(meta)
-	battle_manager.play_card_at_index(index)
+		var attack_btn = Button.new()
+		attack_btn.text = "Attack %d" % i
+		attack_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		attack_btn.pressed.connect(func(): BattleManager.play_card(i, false))
+		
+		var guard_btn = Button.new()
+		guard_btn.text = "Guard %d" % i
+		guard_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		guard_btn.pressed.connect(func(): BattleManager.play_card(i, true))
+		
+		hbox.add_child(attack_btn)
+		hbox.add_child(guard_btn)
+		hand_buttons_container.add_child(hbox)
 
-func _update_card_zone(path: String, cards: Array, title: String, clickable: bool = false) -> void:
-	var zone = get_node_or_null(path)
-	if not zone:
-		return
+func _on_state_changed() -> void:
+	_refresh_ui()
+
+func _on_enemy_state_changed() -> void:
+	_refresh_ui()
+
+func _on_resolving_card_changed(card_name: String) -> void:
+	if is_instance_valid(resolving_zone_label):
+		resolving_zone_label.text = "Resolving: " + card_name if card_name else ""
+		
+func _on_hand_zone_meta_clicked(meta: Variant) -> void:
+	var parts = str(meta).split("_")
+	if parts.size() != 2: return
+	var action = parts[0]
+	var index = int(parts[1])
+	var as_guard = action == "guard"
+	BattleManager.play_card(index, as_guard)
 	
-	zone.bbcode_enabled = true
-	var text = "[b]%s (%d):[/b]\n" % [title, cards.size()]
+func _on_reward_meta_clicked(meta: Variant) -> void:
+	var parts = str(meta).split("_")
+	if parts.size() == 2 and parts[0] == "reward":
+		var index = int(parts[1])
+		if index >= 0 and index < BattleManager.reward_options.size():
+			var chosen = BattleManager.reward_options[index]
+			BattleManager.collection.append(chosen)
+			BattleManager.reward_options.clear()
+			BattleManager.current_mode = "Exploration"
+			BattleManager.emit_signal("state_changed")
+			BattleManager.emit_signal("zones_changed")
+		
+func _process(_delta: float) -> void:
+	# Smooth per-frame progress bars
+	if is_instance_valid(mana_progress):
+		var time_left = BattleManager.mana_timer.time_left if BattleManager.mana_timer else 0.0
+		mana_progress.value = (time_left / BattleConfig.mana_regen_time) * 100.0
+	if is_instance_valid(draw_progress):
+		var time_left = BattleManager.draw_timer.time_left if BattleManager.draw_timer else 0.0
+		draw_progress.value = (time_left / BattleConfig.draw_time) * 100.0
+
+func _refresh_ui() -> void:
+	var data: Dictionary = BattleManager.get_debug_data()
 	
-	if cards.is_empty():
-		text += "[i]empty[/i]"
-	else:
-		for i in cards.size():
-			var card = cards[i]
-			if clickable:
-				# Only HandZone gets clickable [url] tags
-				text += "[url=%d]• %s (DMG %d)[/url]\n" % [i, card.card_name, card.damage]
-			else:
-				text += "• %s (DMG %d)\n" % [card.card_name, card.damage]
+	if is_instance_valid(mode_label):         mode_label.text = "Current Mode: " + data.mode
+	if is_instance_valid(last_card_label):    last_card_label.text = "Last Card: " + data.get("last_card_played", "-")
+	if is_instance_valid(killed_label):       killed_label.text = "Killed: " + ("Yes" if data.get("enemy_hp", 120) <= 0 else "No")
 	
-	zone.text = text
+	if is_instance_valid(deck_label): 		deck_label.text = "Deck: " + str(data.deck_remaining)
+	if is_instance_valid(discard_label):      discard_label.text = "Discard: " + str(data.discard_count)
 	
-	# Connect meta_clicked ONLY for the HandZone (once)
-	if clickable and not zone.meta_clicked.is_connected(_on_hand_meta_clicked):
-		zone.meta_clicked.connect(_on_hand_meta_clicked)
+	if is_instance_valid(mana_label):         mana_label.text = "Mana: " + str(data.mana)
+	if is_instance_valid(mana_timer_label):   mana_timer_label.text = "Mana Timer: %.1f" % data.mana_timer
+	if is_instance_valid(mana_progress):      mana_progress.value = (float(data.mana) / 10.0) * 100.0
+	
+	if is_instance_valid(draw_timer_label):   draw_timer_label.text = "Draw Timer: %.1f" % data.draw_timer
+	if is_instance_valid(draw_progress):      draw_progress.value = (data.draw_timer / 3.0) * 100.0
+	if is_instance_valid(hand_label):         hand_label.text = "Hand: " + str(data.hand_count)
+	
+	# Stage 2
+	if is_instance_valid(player_hp_label):    player_hp_label.text = "Player HP: " + str(data.player_hp)
+	if is_instance_valid(player_guard_label): player_guard_label.text = "Guard: " + str(data.player_guard)
+	
+	if is_instance_valid(guard_zone_label):   guard_zone_label.text = "GuardZone: " + str(data.guard_zone_size)
+	if is_instance_valid(exile_zone_label):   exile_zone_label.text = "ExileZone: " + str(data.exile_size)
+	
+	# Enemy
+	if is_instance_valid(enemy_name_label):   enemy_name_label.text = "Target: " + data.enemy_target
+	if is_instance_valid(enemy_hp_label):     enemy_hp_label.text = "Enemy HP: " + str(data.enemy_hp)
+	if is_instance_valid(enemy_grd_label):    enemy_grd_label.text = "Enemy Guard: " + str(data.enemy_guard)
+	if is_instance_valid(enemy_hand_zone):    enemy_hand_zone.text = "Enemy Hand: " + data.enemy_hand
+	if is_instance_valid(enemy_rage_check):   enemy_rage_check.button_pressed = data.enemy_rage
+	# print("DEBUG: _refresh_ui() ran - mode = ", data.mode)
+	
+		# Card zone population (RichTextLabels)
+	if is_instance_valid(deck_label): deck_label.text = "Deck: " + str(data.deck_remaining)
+	if is_instance_valid(discard_label): discard_label.text = "Discard: " + str(data.discard_count)
+	if is_instance_valid(hand_label): hand_label.text = "Hand: " + str(data.hand_count)
+	if is_instance_valid(guard_zone_label): guard_zone_label.text = "GuardZone: " + str(data.guard_zone_size)
+	if is_instance_valid(exile_zone_label): exile_zone_label.text = "ExileZone: " + str(data.exile_size)
+	
+	# RichTextLabel zones — one card per line (Day 2 style)
+	if is_instance_valid(deck_zone):
+		deck_zone.text = "Deck (" + str(data.deck_remaining) + ")\n" + "\n".join(data.get("deck_cards_list", []))
+	if is_instance_valid(discard_zone):
+		discard_zone.text = "Discard (" + str(data.discard_count) + ")\n" + "\n".join(data.get("discard_cards_list", []))
+	if is_instance_valid(hand_zone):
+		hand_zone.text = "Hand (" + str(data.hand_count) + ")\n" + "\n".join(data.get("hand_cards_list", []))
+	if is_instance_valid(guard_zone_label):
+		guard_zone_label.text = "GuardZone (" + str(data.guard_zone_size) + ")\n" + "\n".join(data.get("guard_cards_list", []))
+	if is_instance_valid(exile_zone_label):
+		exile_zone_label.text = "ExileZone (" + str(data.exile_size) + ")\n" + "\n".join(data.get("exile_cards_list", []))
+		
+	if is_instance_valid(resolving_zone_label):
+		pass  # handled by signal
+		
+	if is_instance_valid(reward_zone):
+		reward_zone.bbcode_enabled = true
+		var reward_text = "Rewards (click to choose)\n"
+		for i in range(data.get("reward_cards_list", []).size()):
+			var card_name = data.get("reward_cards_list", [])[i]
+			reward_text += "[url=reward_%d]%s[/url]\n" % [i, card_name]
+		reward_zone.text = reward_text
+		
+	if is_instance_valid(collection_zone):
+		collection_zone.text = "Collection (" + str(data.get("collection_size", 0)) + ")\n" + "\n".join(data.get("collection_cards_list", []))
+		
+	if is_instance_valid(hand_zone):
+		hand_zone.bbcode_enabled = true
+		var hand_text = "Hand (" + str(data.hand_count) + ")\n"
+		var cards = data.get("hand_cards_list", [])
+		for i in range(cards.size()):
+			var card_name = cards[i]
+			hand_text += "[url=attack_%d]Attack[/url] [url=guard_%d]Guard[/url] %s\n" % [i, i, card_name]
+		hand_zone.text = hand_text
+
+	# Mode visibility
+	_update_mode_visibility(data)
+	
+	# Optional: show actual card names in HandZone for debugging
+	if is_instance_valid(hand_label) and "hand_cards" in data:
+		hand_label.text += "\n" + data.hand_cards
+	
+func _update_mode_visibility(data: Dictionary) -> void:
+	var is_battle = data.mode == "Battle"
+	var is_reward = data.mode == "Reward"
+
+	$InfoCont.visible = true
+	$ButtonCont.visible = true
+	$DecklistsCont.visible = is_battle
+	$ExileCont.visible = is_battle
+	$EnergyCont.visible = is_battle
+	$DrawCont.visible = is_battle
+	$GuardCont.visible = is_battle
+	$EnemyCont.visible = is_battle
+	$ResolveCont.visible = is_battle
+	$RewardCont.visible = is_reward
+	$CollectionCont.visible = is_reward   # always visible so player can see full owned collection
+	
 
 
-# Button functions (same as before)
-#func _on_enter_battle() -> void:
-	#battle_manager.current_mode = "Battle"
-	#battle_manager._reset_game()
-	
-func _on_enter_battle() -> void:
-	battle_manager.start_new_battle()
+# ── Debug button hooks (already wired in your scene) ────────────────────────
+func _on_enter_battle_button_pressed() -> void:
+	#print("DEBUG: _on_enter_battle_button_pressed() called")
+	BattleManager.debug_enter_battle()
 
-func _on_play_card() -> void:
-	battle_manager.play_card_at_index(0)
-	
-func show_resolving_card(card: CardData) -> void:
-	var zone = get_node_or_null("ResolvingZone")
-	if not zone:
-		print("Warning: ResolvingZone not found")
-		return
-	
-	zone.bbcode_enabled = true
-	zone.text = "[b]RESOLVING[/b]\n• %s (DMG %d)" % [card.card_name, card.damage]
-	
-	# Auto-clear after the configured time
-	await get_tree().create_timer(BattleConfig.resolving_time).timeout
-	zone.text = ""
+func _on_kill_enemy_button_pressed() -> void:
+	print("DEBUG: Kill_enemy_button_pressed() called")
+	BattleManager.debug_kill_enemy()
 
-func _on_add_mana() -> void:
-	battle_manager.add_mana(1)
+func _on_respawn_enemy_button_pressed() -> void:
+	BattleManager.debug_respawn_enemy()
 
-func _on_draw_card() -> void:
-	battle_manager.force_draw()
 
-func _on_kill_enemy() -> void:
-	battle_manager.kill_enemy()
-
-func _on_respawn() -> void:
-	battle_manager.respawn_enemy()
+func _on_enter_battle_btn_pressed() -> void:
+	#print("DEBUG: Enter Battle button pressed")
+	BattleManager.debug_enter_battle()
 	
-func _on_claim_reward(index: int) -> void:
-	battle_manager.claim_reward(index)
-
-func _update_reward_ui(data: Dictionary) -> void:
-	var label = get_node_or_null("RewardCont/RewardOptionsLabel")
-	if not label:
-		return
-	
-	if data.mode != "Reward":
-		label.text = ""
-		return
-	
-	label.bbcode_enabled = true
-	label.text = "[b]Choose one reward:[/b]\n"
-	
-	var cards = data.get("reward_cards", [])
-	for i in cards.size():
-		var card = cards[i]
-		# Make each reward line clickable
-		label.text += "[url=%d]%d. %s (DMG %d)[/url]\n" % [i, i, card.card_name, card.damage]
-	
-	# Connect meta_clicked only once
-	if not label.meta_clicked.is_connected(_on_reward_meta_clicked):
-		label.meta_clicked.connect(_on_reward_meta_clicked)
-
-func _on_reward_meta_clicked(meta) -> void:
-	var index = int(meta)
-	battle_manager.claim_reward(index)
-
-func _update_ui_visibility(mode: String) -> void:
-	# Always visible
-	get_node_or_null("InfoCont").visible = true
-	get_node_or_null("ButtonCont").visible = true
-	
-	# Battle-only
-	var is_battle = mode == "Battle"
-	get_node_or_null("EnemyCont").visible = is_battle or mode == "Exploration"
-	get_node_or_null("DrawCont").visible = is_battle
-	get_node_or_null("ExileZone").visible = is_battle
-	get_node_or_null("ResolvingZone").visible = is_battle
-	get_node_or_null("DecklistsCont").visible = is_battle
-	get_node_or_null("EnergyCont").visible = is_battle
-	get_node_or_null("GuardCont").visible = is_battle
-	
-	# Reward-only
-	var is_reward = mode == "Reward"
-	get_node_or_null("RewardCont").visible = is_reward
-	get_node_or_null("CollectionCont").visible = is_reward or mode == "Exploration"
-
-func _connect_button(button_path: String, callable: Callable) -> void:
-	var button = get_node_or_null(button_path)
-	if button:
-		button.pressed.connect(callable)
-	else:
-		print("Warning: Button not found → ", button_path)	

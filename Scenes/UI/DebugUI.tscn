@@ -5,6 +5,8 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fpupx"]
 bg_color = Color(0, 0, 0, 0.27450982)
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_fpupx"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7gdgf"]
 resource_local_to_scene = true
 resource_name = "FlatboxBG"
@@ -128,6 +130,7 @@ text = "Discard "
 [node name="DiscardZone" type="RichTextLabel" parent="DecklistsCont" unique_id=404874313]
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
+theme_override_colors/default_color = Color(0.6715141, 0.67151415, 0.6715141, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Discard"
@@ -136,35 +139,41 @@ scroll_active = false
 
 [node name="EnergyCont" type="HBoxContainer" parent="." unique_id=1718558813]
 layout_mode = 0
-offset_left = 97.0
-offset_top = 307.0
-offset_right = 399.0
-offset_bottom = 347.0
+offset_left = 284.0
+offset_top = 295.0
+offset_right = 586.0
+offset_bottom = 335.0
 
 [node name="ManaTimerLabel" type="Label" parent="EnergyCont" unique_id=96194195]
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.91, 0.91, 1)
 text = "Mana Timer"
 
 [node name="ManaProgress" type="ProgressBar" parent="EnergyCont" unique_id=1875704842]
+modulate = Color(0.039215688, 0.827451, 0.827451, 1)
+material = SubResource("CanvasItemMaterial_fpupx")
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_vertical = 6
 
 [node name="ManaLabel" type="Label" parent="EnergyCont" unique_id=159786296]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.6750939, 0.68330014, 1)
+theme_override_colors/font_color = Color(0, 0.9833336, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 20
 text = "Mana"
 
 [node name="DrawCont" type="HBoxContainer" parent="." unique_id=251230085]
 layout_mode = 0
 offset_left = 126.0
-offset_top = 329.0
+offset_top = 338.0
 offset_right = 688.0
-offset_bottom = 389.0
+offset_bottom = 398.0
 
 [node name="DrawTimerLabel" type="Label" parent="DrawCont" unique_id=672579144]
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Draw Timer"
 
@@ -179,7 +188,7 @@ layout_mode = 2
 text = "Hand"
 
 [node name="HandZone" type="RichTextLabel" parent="DrawCont" unique_id=1961544430]
-custom_minimum_size = Vector2(200, 60)
+custom_minimum_size = Vector2(250, 60)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 theme_override_styles/background = SubResource("StyleBoxFlat_7gdgf")
@@ -188,60 +197,12 @@ text = "Hand"
 fit_content = true
 scroll_active = false
 
-[node name="GuardCont" type="VBoxContainer" parent="." unique_id=700254740]
-layout_mode = 0
-offset_left = 723.0
-offset_top = 281.0
-offset_right = 923.0
-offset_bottom = 368.0
-scale = Vector2(0.8, 0.8)
-
-[node name="ManaLabel2" type="Label" parent="GuardCont" unique_id=619003244]
-layout_mode = 2
-text = "Guard Value"
-
-[node name="GuardZone" type="RichTextLabel" parent="GuardCont" unique_id=2066337464]
-custom_minimum_size = Vector2(200, 60)
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
-bbcode_enabled = true
-text = "Guarding"
-fit_content = true
-scroll_active = false
-
-[node name="ResolvingZone" type="RichTextLabel" parent="." unique_id=1709814981]
-custom_minimum_size = Vector2(200, 60)
-layout_mode = 0
-offset_left = 727.0
-offset_top = 371.0
-offset_right = 927.0
-offset_bottom = 431.0
-scale = Vector2(0.8, 0.8)
-theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
-bbcode_enabled = true
-text = "Resolving"
-fit_content = true
-scroll_active = false
-
-[node name="ExileZone" type="RichTextLabel" parent="." unique_id=1426436787]
-custom_minimum_size = Vector2(200, 60)
-layout_mode = 0
-offset_left = 925.0
-offset_top = 256.0
-offset_right = 1125.0
-offset_bottom = 316.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
-bbcode_enabled = true
-text = "Exile"
-fit_content = true
-scroll_active = false
-
 [node name="EnemyCont" type="HBoxContainer" parent="." unique_id=471102164]
 layout_mode = 0
-offset_left = 126.0
-offset_top = 102.0
-offset_right = 1021.0
-offset_bottom = 162.0
+offset_left = 92.0
+offset_top = 75.0
+offset_right = 1037.0
+offset_bottom = 135.0
 
 [node name="EnemyNameLabel" type="Label" parent="EnemyCont" unique_id=609054153]
 custom_minimum_size = Vector2(150, 0)
@@ -249,7 +210,7 @@ layout_mode = 2
 text = "Enemy Name"
 
 [node name="EnemyHandZone" type="RichTextLabel" parent="EnemyCont" unique_id=1809334817]
-custom_minimum_size = Vector2(200, 60)
+custom_minimum_size = Vector2(250, 60)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 theme_override_styles/background = SubResource("StyleBoxFlat_7gdgf")
@@ -258,15 +219,17 @@ text = "EnemyHand"
 fit_content = true
 scroll_active = false
 
-[node name="EnemyHPLabel" type="Label" parent="EnemyCont" unique_id=464184760]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Enemy HP"
-
 [node name="EnemyGrdLabel" type="Label" parent="EnemyCont" unique_id=163116054]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.77278805, 0.6603368, 0.42241323, 1)
 text = "Enemy Guard"
+
+[node name="EnemyHPLabel" type="Label" parent="EnemyCont" unique_id=464184760]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.41000003, 0.41000003, 1)
+text = "Enemy HP"
 
 [node name="EnemyTeleLabel" type="Label" parent="EnemyCont" unique_id=602943831]
 custom_minimum_size = Vector2(150, 0)
@@ -290,40 +253,23 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -30.0
-offset_right = 100.0
-offset_bottom = 30.0
+offset_left = -104.0
+offset_top = -31.0
+offset_right = 96.0
+offset_bottom = 29.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.2, 1.2)
 
-[node name="RewardOptionsLabel" type="RichTextLabel" parent="RewardCont" unique_id=1929416026]
+[node name="RewardZone" type="RichTextLabel" parent="RewardCont" unique_id=1929416026]
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
+theme_override_colors/default_color = Color(1, 0.92, 0.6, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Rewards"
 fit_content = true
 scroll_active = false
-
-[node name="ClaimReward0Btn" type="Button" parent="RewardCont" unique_id=22658469]
-visible = false
-layout_mode = 2
-text = "Reward 1
-"
-
-[node name="ClaimReward1Btn" type="Button" parent="RewardCont" unique_id=341427964]
-visible = false
-layout_mode = 2
-text = "Reward 2
-"
-
-[node name="ClaimReward2Btn" type="Button" parent="RewardCont" unique_id=155920631]
-visible = false
-layout_mode = 2
-text = "Reward 3
-"
 
 [node name="CollectionCont" type="VBoxContainer" parent="." unique_id=40114502]
 layout_mode = 0
@@ -341,3 +287,87 @@ bbcode_enabled = true
 text = "Collection"
 fit_content = true
 scroll_active = false
+
+[node name="GuardCont" type="VBoxContainer" parent="." unique_id=700254740]
+layout_mode = 0
+offset_left = 737.0
+offset_top = 351.0
+offset_right = 987.0
+offset_bottom = 438.0
+scale = Vector2(0.8, 0.8)
+
+[node name="PlayerGrdLabel" type="Label" parent="GuardCont" unique_id=619003244]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7490196, 0.6431373, 0.41568628, 1)
+text = "Guard Value"
+
+[node name="GuardZone" type="RichTextLabel" parent="GuardCont" unique_id=2066337464]
+custom_minimum_size = Vector2(250, 60)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.62352943, 0.54901963, 0.38431373, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Guarding"
+fit_content = true
+scroll_active = false
+
+[node name="PlayerCont" type="VBoxContainer" parent="." unique_id=1103574502]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -118.0
+offset_right = 100.0
+offset_bottom = -83.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="PlayerHPLabel" type="Label" parent="PlayerCont" unique_id=351313729]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5753333, 1, 0.089999974, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 25
+text = "Player HP"
+
+[node name="ExileCont" type="VBoxContainer" parent="." unique_id=1330818209]
+layout_mode = 0
+offset_left = 946.00006
+offset_top = 370.0
+offset_right = 1146.0
+offset_bottom = 430.0
+scale = Vector2(0.9, 0.9)
+
+[node name="ExileZone" type="RichTextLabel" parent="ExileCont" unique_id=1426436787]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.388011, 0.34806958, 0.5921309, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Exile"
+fit_content = true
+scroll_active = false
+
+[node name="ResolveCont" type="VBoxContainer" parent="." unique_id=1728822669]
+layout_mode = 0
+offset_left = 675.0
+offset_top = 265.0
+offset_right = 875.0
+offset_bottom = 325.0
+scale = Vector2(0.9, 0.9)
+
+[node name="ResolvingZone" type="RichTextLabel" parent="ResolveCont" unique_id=1709814981]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.8833333, 1, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Resolving"
+fit_content = true
+scroll_active = false
+
+[connection signal="pressed" from="ButtonCont/EnterBattleBtn" to="." method="_on_enter_battle_btn_pressed"]
