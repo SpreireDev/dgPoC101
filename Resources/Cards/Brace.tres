@@ -1,4 +1,4 @@
-[gd_resource type="CardData" load_steps=1 format=3 uid="uid://d1f2a3b4c5d6e"]
+[gd_resource type="CardData" format=3 uid="uid://d1f2a3b4c5d6e"]
 
 [resource]
 card_name = "Brace"

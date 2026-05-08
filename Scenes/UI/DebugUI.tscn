@@ -132,10 +132,10 @@ scroll_active = false
 
 [node name="EnergyCont" type="HBoxContainer" parent="." unique_id=1718558813]
 layout_mode = 0
-offset_left = 185.0
-offset_top = 286.0
-offset_right = 487.0
-offset_bottom = 326.0
+offset_left = 112.0
+offset_top = 372.0
+offset_right = 414.0
+offset_bottom = 412.0
 
 [node name="ManaTimerLabel" type="Label" parent="EnergyCont" unique_id=96194195]
 custom_minimum_size = Vector2(150, 0)
@@ -149,14 +149,16 @@ size_flags_vertical = 6
 
 [node name="ManaLabel" type="Label" parent="EnergyCont" unique_id=159786296]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.6750939, 0.68330014, 1)
 text = "Mana"
 
 [node name="DrawCont" type="HBoxContainer" parent="." unique_id=251230085]
 layout_mode = 0
-offset_left = 185.0
-offset_top = 321.0
-offset_right = 647.0
-offset_bottom = 381.0
+offset_left = 130.0
+offset_top = 328.0
+offset_right = 692.0
+offset_bottom = 388.0
+scale = Vector2(0.9, 0.9)
 
 [node name="DrawTimerLabel" type="Label" parent="DrawCont" unique_id=672579144]
 custom_minimum_size = Vector2(150, 0)
@@ -184,34 +186,79 @@ fit_content = true
 scroll_active = false
 
 [node name="ResolvingZone" type="RichTextLabel" parent="." unique_id=1709814981]
-custom_minimum_size = Vector2(100, 60)
+custom_minimum_size = Vector2(200, 60)
 layout_mode = 0
-offset_left = 806.0
-offset_top = 365.0
-offset_right = 906.0
-offset_bottom = 425.0
+offset_left = 669.0
+offset_top = 389.0
+offset_right = 869.0
+offset_bottom = 449.0
+scale = Vector2(0.8, 0.8)
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Resolving"
 fit_content = true
 scroll_active = false
 
+[node name="ExileZone" type="RichTextLabel" parent="." unique_id=1426436787]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 0
+offset_left = 925.0
+offset_top = 256.0
+offset_right = 1125.0
+offset_bottom = 316.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Exile"
+fit_content = true
+scroll_active = false
+
 [node name="EnemyCont" type="HBoxContainer" parent="." unique_id=471102164]
 layout_mode = 0
-offset_left = 433.0
-offset_top = 36.0
-offset_right = 687.0
-offset_bottom = 76.0
+offset_left = 168.0
+offset_top = 150.0
+offset_right = 993.0
+offset_bottom = 210.0
+scale = Vector2(0.8, 0.8)
 
 [node name="EnemyNameLabel" type="Label" parent="EnemyCont" unique_id=609054153]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Enemy Name"
 
+[node name="EnemyHandZone" type="RichTextLabel" parent="EnemyCont" unique_id=1809334817]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+theme_override_styles/background = SubResource("StyleBoxFlat_7gdgf")
+bbcode_enabled = true
+text = "EnemyHand"
+fit_content = true
+scroll_active = false
+
 [node name="EnemyHPLabel" type="Label" parent="EnemyCont" unique_id=464184760]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Enemy HP"
+
+[node name="EnemyGrdLabel" type="Label" parent="EnemyCont" unique_id=163116054]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Enemy Guard"
+
+[node name="EnemyTeleLabel" type="Label" parent="EnemyCont" unique_id=602943831]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Enemy Telegraph"
+
+[node name="EnemyProgress" type="ProgressBar" parent="EnemyCont" unique_id=422819700]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="EnemyRage" type="CheckBox" parent="EnemyCont" unique_id=1915952598]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.36080003, 0.36080003, 1)
+text = "Rage"
 
 [node name="RewardCont" type="GridContainer" parent="." unique_id=1349942976]
 layout_mode = 0
@@ -219,6 +266,7 @@ offset_left = 939.0
 offset_top = 13.0
 offset_right = 1139.0
 offset_bottom = 178.0
+scale = Vector2(0.9, 0.9)
 
 [node name="RewardOptionsLabel" type="RichTextLabel" parent="RewardCont" unique_id=1929416026]
 custom_minimum_size = Vector2(200, 60)
@@ -253,6 +301,7 @@ offset_left = 733.0
 offset_top = 14.0
 offset_right = 933.0
 offset_bottom = 74.0
+scale = Vector2(0.9, 0.9)
 
 [node name="CollectionZone" type="RichTextLabel" parent="CollectionCont" unique_id=1752698474]
 custom_minimum_size = Vector2(200, 60)
@@ -260,5 +309,26 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Collection"
+fit_content = true
+scroll_active = false
+
+[node name="GuardCont" type="VBoxContainer" parent="." unique_id=700254740]
+layout_mode = 0
+offset_left = 669.0
+offset_top = 288.0
+offset_right = 869.0
+offset_bottom = 375.0
+scale = Vector2(0.8, 0.8)
+
+[node name="ManaLabel2" type="Label" parent="GuardCont" unique_id=619003244]
+layout_mode = 2
+text = "Guard Value"
+
+[node name="GuardZone" type="RichTextLabel" parent="GuardCont" unique_id=2066337464]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Guarding"
 fit_content = true
 scroll_active = false
