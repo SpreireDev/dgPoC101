@@ -27,11 +27,13 @@ offset_left = 21.0
 offset_top = 19.0
 offset_right = 124.0
 offset_bottom = 293.0
+scale = Vector2(0.8, 0.8)
 size_flags_horizontal = 0
 size_flags_vertical = 4
 
 [node name="ModeLabel" type="Label" parent="InfoCont" unique_id=1575472003]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.73745, 0.009799991, 1)
 text = "Mode"
 
 [node name="LastCardLabel" type="Label" parent="InfoCont" unique_id=2117229161]
@@ -70,6 +72,7 @@ text = "Play Card"
 
 [node name="AddManaBtn" type="Button" parent="ButtonCont" unique_id=1757752631]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.039215688, 0.627451, 0.63529414, 1)
 text = "Add 1 Mana"
 
 [node name="DrawCardBtn" type="Button" parent="ButtonCont" unique_id=2009358201]
@@ -91,12 +94,13 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -562.0
-offset_top = -175.0
-offset_right = 654.0
-offset_bottom = -115.0
+offset_left = -545.0
+offset_top = -163.99997
+offset_right = 671.0
+offset_bottom = -104.0
 grow_horizontal = 2
 grow_vertical = 0
+scale = Vector2(0.9, 0.9)
 
 [node name="DeckZone" type="RichTextLabel" parent="DecklistsCont" unique_id=513526923]
 custom_minimum_size = Vector2(200, 60)
@@ -113,7 +117,7 @@ layout_mode = 2
 text = "Deck"
 
 [node name="Control" type="Control" parent="DecklistsCont" unique_id=1950346923]
-custom_minimum_size = Vector2(500, 0)
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 
 [node name="DiscardLabel" type="Label" parent="DecklistsCont" unique_id=268988395]
@@ -132,10 +136,10 @@ scroll_active = false
 
 [node name="EnergyCont" type="HBoxContainer" parent="." unique_id=1718558813]
 layout_mode = 0
-offset_left = 112.0
-offset_top = 372.0
-offset_right = 414.0
-offset_bottom = 412.0
+offset_left = 97.0
+offset_top = 307.0
+offset_right = 399.0
+offset_bottom = 347.0
 
 [node name="ManaTimerLabel" type="Label" parent="EnergyCont" unique_id=96194195]
 custom_minimum_size = Vector2(150, 0)
@@ -154,11 +158,10 @@ text = "Mana"
 
 [node name="DrawCont" type="HBoxContainer" parent="." unique_id=251230085]
 layout_mode = 0
-offset_left = 130.0
-offset_top = 328.0
-offset_right = 692.0
-offset_bottom = 388.0
-scale = Vector2(0.9, 0.9)
+offset_left = 126.0
+offset_top = 329.0
+offset_right = 688.0
+offset_bottom = 389.0
 
 [node name="DrawTimerLabel" type="Label" parent="DrawCont" unique_id=672579144]
 custom_minimum_size = Vector2(150, 0)
@@ -185,13 +188,34 @@ text = "Hand"
 fit_content = true
 scroll_active = false
 
+[node name="GuardCont" type="VBoxContainer" parent="." unique_id=700254740]
+layout_mode = 0
+offset_left = 723.0
+offset_top = 281.0
+offset_right = 923.0
+offset_bottom = 368.0
+scale = Vector2(0.8, 0.8)
+
+[node name="ManaLabel2" type="Label" parent="GuardCont" unique_id=619003244]
+layout_mode = 2
+text = "Guard Value"
+
+[node name="GuardZone" type="RichTextLabel" parent="GuardCont" unique_id=2066337464]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
+bbcode_enabled = true
+text = "Guarding"
+fit_content = true
+scroll_active = false
+
 [node name="ResolvingZone" type="RichTextLabel" parent="." unique_id=1709814981]
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 0
-offset_left = 669.0
-offset_top = 389.0
-offset_right = 869.0
-offset_bottom = 449.0
+offset_left = 727.0
+offset_top = 371.0
+offset_right = 927.0
+offset_bottom = 431.0
 scale = Vector2(0.8, 0.8)
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
@@ -214,11 +238,10 @@ scroll_active = false
 
 [node name="EnemyCont" type="HBoxContainer" parent="." unique_id=471102164]
 layout_mode = 0
-offset_left = 168.0
-offset_top = 150.0
-offset_right = 993.0
-offset_bottom = 210.0
-scale = Vector2(0.8, 0.8)
+offset_left = 126.0
+offset_top = 102.0
+offset_right = 1021.0
+offset_bottom = 162.0
 
 [node name="EnemyNameLabel" type="Label" parent="EnemyCont" unique_id=609054153]
 custom_minimum_size = Vector2(150, 0)
@@ -261,12 +284,19 @@ theme_override_colors/font_color = Color(0.88, 0.36080003, 0.36080003, 1)
 text = "Rage"
 
 [node name="RewardCont" type="GridContainer" parent="." unique_id=1349942976]
-layout_mode = 0
-offset_left = 939.0
-offset_top = 13.0
-offset_right = 1139.0
-offset_bottom = 178.0
-scale = Vector2(0.9, 0.9)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -30.0
+offset_right = 100.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.2, 1.2)
 
 [node name="RewardOptionsLabel" type="RichTextLabel" parent="RewardCont" unique_id=1929416026]
 custom_minimum_size = Vector2(200, 60)
@@ -297,10 +327,10 @@ text = "Reward 3
 
 [node name="CollectionCont" type="VBoxContainer" parent="." unique_id=40114502]
 layout_mode = 0
-offset_left = 733.0
-offset_top = 14.0
-offset_right = 933.0
-offset_bottom = 74.0
+offset_left = 19.0
+offset_top = 159.0
+offset_right = 219.0
+offset_bottom = 219.0
 scale = Vector2(0.9, 0.9)
 
 [node name="CollectionZone" type="RichTextLabel" parent="CollectionCont" unique_id=1752698474]
@@ -309,26 +339,5 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
 bbcode_enabled = true
 text = "Collection"
-fit_content = true
-scroll_active = false
-
-[node name="GuardCont" type="VBoxContainer" parent="." unique_id=700254740]
-layout_mode = 0
-offset_left = 669.0
-offset_top = 288.0
-offset_right = 869.0
-offset_bottom = 375.0
-scale = Vector2(0.8, 0.8)
-
-[node name="ManaLabel2" type="Label" parent="GuardCont" unique_id=619003244]
-layout_mode = 2
-text = "Guard Value"
-
-[node name="GuardZone" type="RichTextLabel" parent="GuardCont" unique_id=2066337464]
-custom_minimum_size = Vector2(200, 60)
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_fpupx")
-bbcode_enabled = true
-text = "Guarding"
 fit_content = true
 scroll_active = false

@@ -213,8 +213,11 @@ func _update_ui_visibility(mode: String) -> void:
 	var is_battle = mode == "Battle"
 	get_node_or_null("EnemyCont").visible = is_battle or mode == "Exploration"
 	get_node_or_null("DrawCont").visible = is_battle
+	get_node_or_null("ExileZone").visible = is_battle
+	get_node_or_null("ResolvingZone").visible = is_battle
 	get_node_or_null("DecklistsCont").visible = is_battle
 	get_node_or_null("EnergyCont").visible = is_battle
+	get_node_or_null("GuardCont").visible = is_battle
 	
 	# Reward-only
 	var is_reward = mode == "Reward"
